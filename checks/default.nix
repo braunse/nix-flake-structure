@@ -15,6 +15,13 @@ in
 genAttrs
   flake-utils.lib.defaultSystems
   (system:
+    let pkgs = nixpkgs.legacyPackages.${system};
+    in
     {
       tests = self.lib.runUnitTests { inherit system; tests = testModule; };
+
+      formatted = pkgs.runCommandNoCC "check-formatted" { buildInputs = [ pkgs.nixpkgs-fmt ]; } ''
+        nixpkgs-fmt --check ${self}
+        touch $out
+      '';
     })

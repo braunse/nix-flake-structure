@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-{ self, nixpkgs, flake-utils, ... }:
+{ self, nixpkgs, ... }:
 
 with nixpkgs.lib;
 
@@ -12,8 +12,7 @@ let
     part = "${self}/tests";
   };
 in
-genAttrs
-  flake-utils.lib.defaultSystems
+self.lib.eachDefaultSystem
   (system:
     let pkgs = nixpkgs.legacyPackages.${system};
     in

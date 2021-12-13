@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-{ self, nixpkgs, flake-utils, part, ... }:
+{ self, nixpkgs, part, ... }:
 
 with builtins;
 with nixpkgs.lib;

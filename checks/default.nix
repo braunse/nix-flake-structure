@@ -23,4 +23,10 @@ self.lib.eachDefaultSystem
         nixpkgs-fmt --check ${self}
         touch $out
       '';
+
+      reuse = pkgs.runCommandNoCC "reuse-check" { buildInputs = [ pkgs.reuse ]; } ''
+        cd ${self}
+        reuse lint
+        touch $out
+      '';
     })

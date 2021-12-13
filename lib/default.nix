@@ -25,7 +25,10 @@ rec {
 
   filters = {
     all = { system, name, value }: true;
-    compatible = { system, name, value }: !(value ? meta && value.meta ? platforms) or elem system value.meta.platforms;
+    compatible = { system, name, value }:
+      !(value ? meta) ||
+      !(value.meta ? platforms) ||
+      elem system value.meta.platforms;
   };
 
   transforms = rec {
@@ -179,11 +182,11 @@ rec {
     , filter ? filters.compatible
     , args ? null
     , systems
-    , nixpkgs ? <nixpkgs>
+    , nixpkgs
     }:
     callDirectory {
       inherit path args filter systems;
-      transform = transforms.callPkgs;
+      transform = transforms.callPkgs nixpkgs;
     };
 
   importDirectoryPackages =
@@ -191,11 +194,11 @@ rec {
     , filter ? filters.compatible
     , args ? null
     , systems
-    , nixpkgs ? <nixpkgs>
+    , nixpkgs
     }:
     callDirectory {
       inherit path args filter systems;
-      transform = transforms.callPkgsByFile;
+      transform = transforms.callPkgsByFile nixpkgs;
     };
 
   inherit (testlib) runUnitTests;

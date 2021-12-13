@@ -10,6 +10,10 @@ with self.lib;
 
 let
   inherit (nixpkgs) lib;
+
+  mustBeDerivation = it:
+    if isDerivation it then true
+    else { not-a-derivation = it; };
 in
 {
 
@@ -151,6 +155,22 @@ in
           b = { one = 1; };
         };
       };
+    }
+  ];
+
+  testImportDirectoryPackages = [
+    {
+      expr = mustBeDerivation (
+        (
+          (importDirectoryPackages {
+            path = ./pkg-merge-noargs;
+            systems = [ "x86_64-linux" ];
+            inherit nixpkgs;
+          }
+          ).x86_64-linux or { problem = "No x86_64-linux!"; }
+        ).pkg or { problem = "No pkg!"; }
+      );
+      expected = true;
     }
   ];
 }

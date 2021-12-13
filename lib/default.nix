@@ -199,4 +199,25 @@ rec {
     };
 
   inherit (testlib) runUnitTests;
+
+  # It feels silly to import flake-utils just for defaultSystems...
+  defaultSystems = [
+    "aarch64-darwin"
+    "aarch64-linux"
+    "i686-linux"
+    "x86_64-darwin"
+    "x86_64-linux"
+  ];
+
+  defaultLinuxSystems = [
+    "aarch64-linux"
+    "i686-linux"
+    "x86_64-linux"
+  ];
+
+  eachSystem = genAttrs;
+
+  eachDefaultSystem = eachSystem defaultSystems;
+
+  eachDefaultLinuxSystem = eachSystem defaultLinuxSystems;
 }
